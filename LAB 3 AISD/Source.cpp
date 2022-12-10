@@ -54,37 +54,109 @@ class TemplateVector
 {
 private:
 	size_t size;
-	vector<T> array;
+	vector<T> arr;
 	T eps;
+
 public:
+
+	/*class Iterator
+	{
+		vector<T>* ar = nullptr;
+		size_t index = 0;
+		friend class TemplateVector;
+
+	public:
+
+		Iterator() = default;
+
+		Iterator(const TemplateVector<T>& _v, size_t i)
+		{
+			index = i;
+			ar = _v.arr;
+		}
+
+		const vector<T>& operator*() const
+		{
+			return *ar[index];
+		}
+
+		vector<T>& operator*()
+		{
+			return *ar[index];
+		}
+
+		static Iterator begin(TemplateVector<T>& _v)
+		{
+			return Iterator(_v, 0);
+		}
+
+		static Iterator end(TemplateVector<T>& _v)
+		{
+			return Iterator(_v, _v.get_size());
+		}
+
+		Iterator& operator++()
+		{
+			if (index + 1 < *ar.size())
+			{
+				++index;
+			}
+			
+			else
+			{
+				index = 0;
+			}
+			return *this;
+		}
+
+		bool operator==(const Iterator& v) const
+		{
+			return v.ar == ar && v.index == index;
+		}
+		bool operator!=(const Iterator& v) const
+		{
+			return !(*this == v);
+		}
+		
+	};*/
 
 	TemplateVector()
 	{
-		size = 1;
+		size = 0;
 		eps = 0;
-		array.reserve(1);
 	}
 
 	TemplateVector(const size_t d)
 	{
 		size = d;
-		array.reserve(d);
+		arr.reserve(d);
 		eps = 0;
 	}
 
 	TemplateVector(const size_t d, const T* ar, const T epsilon)
 	{
 		size = d;
-		array.reserve(d);
+		arr.reserve(d);
 		eps = epsilon;
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			array.push_back(ar[i]);
+			arr.push_back(ar[i]);
 		}
 
 	}
 
+
+
+	vector<T>& begin()
+	{
+		return arr.begin();
+	}
+
+	vector<T>& end()
+	{
+		return arr.end();
+	}
 
 	TemplateVector(const TemplateVector& source) = default;
 	//{
@@ -106,17 +178,17 @@ public:
 		{
 			if (i == 0)
 			{
-				os << '(' << v.array.at(0) << ',';
+				os << '(' << v.arr.at(0) << ',';
 			}
 
 			else if (i < v.size - 1)
 			{
-				os << v.array.at(i) << ',';
+				os << v.arr.at(i) << ',';
 			}
 
 			else if (i == v.size - 1)
 			{
-				os << v.array.at(i) << ')';
+				os << v.arr.at(i) << ')';
 			}
 		}
 
@@ -136,12 +208,17 @@ public:
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			if (abs(array.at(i) - v.array.at(i)) > eps)
+			if (abs(arr.at(i) - v.arr.at(i)) > eps)
 			{
 				return false;
 			}
 		}
 		return true;
+	}
+
+	bool operator!=(const TemplateVector<T>& v) const
+	{
+		return !(*this == v);
 	}
 
 	TemplateVector operator + (const TemplateVector& v) const
@@ -150,7 +227,7 @@ public:
 		if (size != v.size)throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) + v.array.at(i));
+			obj.arr.push_back(arr.at(i) + v.arr.at(i));
 		}
 		return obj;
 	}
@@ -161,7 +238,7 @@ public:
 		if (size != v.get_size())throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) + v[i]);
+			obj.arr.push_back(arr.at(i) + v[i]);
 		}
 		return obj;
 	}
@@ -171,7 +248,7 @@ public:
 		if (size != v.size)throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			this->array.emplace(i,array.at(i) + v.array.at(i));
+			this->arr.emplace(i,arr.at(i) + v.arr.at(i));
 		}
 		return *this;
 	}
@@ -182,7 +259,7 @@ public:
 		if (size != v.get_size())throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) + v[i]);
+			obj.arr.push_back(arr.at(i) + v[i]);
 		}
 		return obj;
 	}
@@ -193,7 +270,7 @@ public:
 		if (size != v.size)throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) - v.array.at(i));
+			obj.arr.push_back(arr.at(i) - v.arr.at(i));
 		}
 		return obj;
 	}
@@ -204,7 +281,7 @@ public:
 		if (size != v.get_size())throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) - v[i]);
+			obj.arr.push_back(arr.at(i) - v[i]);
 		}
 		return obj;
 	}
@@ -214,7 +291,7 @@ public:
 		if (size != v.size)throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			this->array.at(i) = array.at(i) - v.array.at(i);
+			this->arr.at(i) = arr.at(i) - v.arr.at(i);
 		}
 		return *this;
 	}
@@ -225,7 +302,7 @@ public:
 		if (size != v.get_size())throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.emplace(i, array.at(i) - v[i]);
+			obj.arr.emplace(i, arr.at(i) - v[i]);
 		}
 		return obj;
 	}
@@ -236,7 +313,7 @@ public:
 		if (size != v.size)throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			multiplication += array.at(i) * v.array.at(i);
+			multiplication += arr.at(i) * v.arr.at(i);
 		}
 		return multiplication;
 	}
@@ -247,7 +324,7 @@ public:
 		if (size != v.get_size())throw ESize();
 		for (size_t i = 0; i < size; ++i)
 		{
-			multiplication += array.at(i) * conj(v[i]);
+			multiplication += arr.at(i) * conj(v[i]);
 		}
 		return multiplication;
 	}
@@ -257,7 +334,7 @@ public:
 		TemplateVector<T> obj(size);
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) * s);
+			obj.arr.push_back(arr.at(i) * s);
 		}
 		return obj;
 
@@ -268,7 +345,7 @@ public:
 		TemplateVector<complex<T>> obj(size);
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back( array.at(i) * s);
+			obj.arr.push_back( arr.at(i) * s);
 		}
 		return obj;
 
@@ -279,7 +356,7 @@ public:
 		TemplateVector<T> obj(v.size);
 		for (size_t i = 0; i < v.size; ++i)
 		{
-			obj.array.push_back(v.array.at(i) * s);
+			obj.array.push_back(v.arr.at(i) * s);
 		}
 		return obj;
 
@@ -290,7 +367,7 @@ public:
 		TemplateVector<complex<T>> obj(v.size);
 		for (size_t i = 0; i < v.size; ++i)
 		{
-			obj.array.push_back( v.array.at(i) * s);
+			obj.array.push_back( v.arr.at(i) * s);
 		}
 		return obj;
 
@@ -302,7 +379,7 @@ public:
 		if (s == 0) throw EDivisionByZero();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) / s);
+			obj.arr.push_back(arr.at(i) / s);
 		}
 		return obj;
 	}
@@ -313,7 +390,7 @@ public:
 		if (s == 0) throw EDivisionByZero();
 		for (size_t i = 0; i < size; ++i)
 		{
-			obj.array.push_back(array.at(i) / s);
+			obj.arr.push_back(arr.at(i) / s);
 		}
 		return obj;
 	}
@@ -321,13 +398,13 @@ public:
 	T operator [] (const size_t i) const
 	{
 		if (i > size or i < 0) throw ENotExistsIndex();
-		return array.at(i);
+		return arr.at(i);
 	}
 
 	T& operator [] (const size_t i)
 	{
 		if (i > size or i < 0) throw ENotExistsIndex();
-		return array.at(i);
+		return arr.at(i);
 	}
 
 	size_t get_size() const
@@ -341,7 +418,7 @@ public:
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			sum += pow(array.at(i), 2);
+			sum += pow(arr.at(i), 2);
 		}
 
 		return sqrt(sum);
@@ -350,13 +427,13 @@ public:
 
 	T calc_coordinate(const T k, const TemplateVector& v, const size_t index)
 	{
-		T coordinate = (array.at(index) + (v.array.at(index) * k)) / (1.0 + k);
+		T coordinate = (arr.at(index) + (v.arr.at(index) * k)) / (1.0 + k);
 		return coordinate;
 	}
 
 	complex<T> calc_coordinate(const complex<T> k, const TemplateVector<complex<T>>& v, const size_t index)
 	{
-		complex<T> coordinate = (array.at(index) + (v[index] * k)) / (1.0 + k);
+		complex<T> coordinate = (arr.at(index) + (v[index] * k)) / (1.0 + k);
 		return coordinate;
 	}
 
@@ -399,16 +476,18 @@ public:
 		return obj;
 	}
 
-	TemplateVector operator =(const TemplateVector& v)
-	{
-		if (size != v.size)throw ESize();
+	//TemplateVector operator =(const TemplateVector& v)
+	//{
+	//	if (size != v.size)throw ESize();
 
-		for (size_t i = 0; i < size; ++i)
-		{
-			array.emplace(i, v.array.at(i));
-		}
-		return *this;
-	}
+	//	for (size_t i = 0; i < size; ++i)
+	//	{
+	//		array.emplace(i, v.array.at(i));
+	//	}
+	//	return *this;
+	//}
+
+
 
 };
 
@@ -827,6 +906,14 @@ int main()
 
 	cout << "test of radius_vector (double , double) : " << result4 << endl;
 	cout << "test of radius_vector (double, complex<double>) , must be same as (complex<double>, double) : " << endl << result3 << endl;
+
+
+
+	for (auto y : f_v)
+	{
+		cout << y << endl;
+	}
+
 
 
 	return 0;

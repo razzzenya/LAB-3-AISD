@@ -53,7 +53,7 @@ template <typename T>
 class TemplateVector
 {
 private:
-	size_t size;
+	size_t size; 
 	vector<T> arr;
 	T eps;
 
@@ -72,7 +72,7 @@ public:
 		eps = 0;
 	}
 
-	TemplateVector(const size_t d, const T* ar, const T epsilon)
+	TemplateVector(const size_t d, const vector<T> ar, const T epsilon)
 	{
 		size = d;
 		arr.reserve(d);
@@ -371,12 +371,12 @@ public:
 		T length_a = vector_length(), length_b = v.vector_length();
 		//cout << length_a << " , " << length_b << endl; // ïðîñòî ïå÷àòü ïðîâåðêè
 		T k = length_a / length_b;
-		T* coordinates = new T[size];
+		vector<T> coordinates;
 
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			coordinates[i] = calc_coordinate(k, v, i);
+			coordinates.push_back(calc_coordinate(k, v, i));
 		}
 
 		TemplateVector obj(size, coordinates, 0);
@@ -391,12 +391,11 @@ public:
 		complex<T> length_b = v.vector_length();
 		//cout << length_a << " , " << length_b << endl; // ïðîñòî ïå÷àòü ïðîâåðêè
 		complex<T> k = length_a / length_b;
-		complex<T>* coordinates = new complex<T>[size];
-
+		vector <complex<T>> coordinates;
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			coordinates[i] = calc_coordinate(k, v, i);
+			coordinates.push_back(calc_coordinate(k, v, i));
 		}
 
 		TemplateVector<complex<T>> obj(size, coordinates, 0);
@@ -442,7 +441,7 @@ public:
 		eps = 0;
 	}
 
-	TemplateVector(const size_t d, const complex<T>* ar, const T epsilon)
+	TemplateVector(const size_t d, const vector<complex<T>> ar, const T epsilon)
 	{
 		size = d;
 		arr.reserve(d);
@@ -743,12 +742,12 @@ public:
 		T length_b = v.vector_length();
 		//cout << length_a << " , " << length_b << endl; // ïðîñòî ïå÷àòü ïðîâåðêè
 		complex<T> k = length_a / length_b;
-		complex<T>* coordinates = new complex<T>[size];
+		vector <complex<T>> coordinates;
 
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			coordinates[i] = calc_coordinate(k, v, i);
+			coordinates.push_back(calc_coordinate(k, v, i));
 		}
 
 		TemplateVector<complex<T>> obj(size, coordinates, 0);
@@ -763,12 +762,12 @@ public:
 		complex<T> length_b = vector_length();
 		//cout << length_a << " , " << length_b << endl; // ïðîñòî ïå÷àòü ïðîâåðêè
 		complex<T> k = length_a / length_b;
-		complex<T>* coordinates = new complex<T>[size];
+		vector <complex<T>> coordinates;
 
 
 		for (size_t i = 0; i < size; ++i)
 		{
-			coordinates[i] = calc_coordinate(k, v, i);
+			coordinates.push_back(calc_coordinate(k, v, i));
 		}
 
 		TemplateVector<complex<T>> obj(size, coordinates, 0);
@@ -792,16 +791,16 @@ public:
 
 int main()
 {
-	int fir_array[3] = { 1, 2, 3 };
-	int sec_array[3] = { 4, 5, 6 };
+	vector<int> fir_array = { 1, 2, 3 };
+	vector<int> sec_array= { 4, 5, 6 };
 
 	TemplateVector<int> first(3, fir_array, 0), second(3, sec_array, 0);
 	cout << first << endl;
 	TemplateVector<int> resultsum = first + second;
 	cout << "sum: " << resultsum << endl;
 
-	double first_array[3] = { 1.1, 2.2, 3.3 };
-	double second_array[3] = { 4.4, 5.5, 6.6 };
+	vector<double> first_array = { 1.1, 2.2, 3.3 };
+	vector<double> second_array = { 4.4, 5.5, 6.6 };
 
 	TemplateVector<double> f_v(3, first_array, 0.5), s_v(3, second_array, 0.5);
 	TemplateVector<double> resultsubtraction = s_v - f_v;
@@ -818,7 +817,7 @@ int main()
 	cout << "test of radius vector : " << rad_vec << endl;
 
 	complex<double>  z1(1, 2), z2(3, 4), z3(5, 6), z4(7, 8), z5(9, 10), z6(11, 12);
-	complex<double> arr[3] = { z1, z2, z3 }, arr2[3] = { z4, z5, z6 };
+	vector<complex<double>> arr = { z1, z2, z3 }, arr2 = { z4, z5, z6 };
 	TemplateVector<complex<double>> complexv(3, arr, 0.5), complexv2(3, arr2, 0.5);
 	cout << "complexv : " << complexv << endl;
 	cout << "complexv2 : " << complexv2 << endl;
@@ -835,7 +834,7 @@ int main()
 	cout << "test of radius_vector (complex<double>, complex<double>) : " << result1 << endl;
 	cout << "test of radius_vector (complex<double>, double) : " << result2 << endl;
 
-	double test_for_rv1[2] = { 3, 7 }, test_for_rv2[2] = { 8, 4 };
+	vector<double> test_for_rv1 = { 3, 7 }, test_for_rv2 = { 8, 4 };
 	TemplateVector<double> vector1(2, test_for_rv1, 0.5), vector2(2, test_for_rv2, 0.5);
 	TemplateVector<double> result4 = vector1.radius_vector(vector2);
 	TemplateVector<complex<double>> result3 = f_v.radius_vector(complexv);
